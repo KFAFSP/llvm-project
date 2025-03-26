@@ -109,9 +109,8 @@ def InferTypeOpInterface : OpInterface<"InferTypeOpInterface"> {
         return ConcreteOp::isCompatibleReturnTypes(lhs, rhs);
       }],
       /*defaultImplementation=*/[{
-        /// Returns whether two arrays are equal as strongest check for
-        /// compatibility by default.
-        return lhs == rhs;
+        return ::mlir::detail::isCompatibleReturnTypes(
+          ConcreteOp::getOperationName(), lhs, rhs);
       }]
     >,
   ];

@@ -18,6 +18,7 @@ set(LLVM_OPTIONAL_SOURCES
   SideEffectInterfaces.cpp
   SubsetOpInterface.cpp
   TilingInterface.cpp
+  TypeCheckOpInterface.cpp
   ValueBoundsOpInterface.cpp
   VectorInterfaces.cpp
   ViewLikeInterface.cpp

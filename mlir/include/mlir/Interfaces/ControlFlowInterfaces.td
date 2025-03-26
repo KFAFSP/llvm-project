@@ -92,11 +92,13 @@ def BranchOpInterface : OpInterface<"BranchOpInterface"> {
     >,
     InterfaceMethod<[{
         This method is called to compare types along control-flow edges. By
-        default, the types are checked as equal.
+        default, the type system of the operation's dialect is used.
       }],
       "bool", "areTypesCompatible",
       (ins "::mlir::Type":$lhs, "::mlir::Type":$rhs), [{}],
-       [{ return lhs == rhs; }]
+      /*defaultImplementation=*/ [{
+        return detail::areTypesCompatible($_op, lhs, rhs);
+      }]
     >,
   ];
 
@@ -252,11 +254,13 @@ def RegionBranchOpInterface : OpInterface<"RegionBranchOpInterface"> {
     >,
     InterfaceMethod<[{
         This method is called to compare types along control-flow edges. By
-        default, the types are checked as equal.
+        default, the type system of the operation's dialect is used.
       }],
       "bool", "areTypesCompatible",
       (ins "::mlir::Type":$lhs, "::mlir::Type":$rhs), [{}],
-      /*defaultImplementation=*/[{ return lhs == rhs; }]
+      /*defaultImplementation=*/[{
+        return detail::areTypesCompatible($_op, lhs, rhs);
+      }]
     >,
   ];
 

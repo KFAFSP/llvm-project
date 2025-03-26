@@ -19,6 +19,7 @@ add_mlir_library(MLIRTransforms
   SymbolDCE.cpp
   SymbolPrivatize.cpp
   TopologicalSort.cpp
+  TypeCheck.cpp
   ViewOpGraph.cpp
 
   ADDITIONAL_HEADER_DIRS
@@ -37,5 +38,6 @@ add_mlir_library(MLIRTransforms
   MLIRSideEffectInterfaces
   MLIRSupport
   MLIRTransformUtils
+  MLIRTyping
   MLIRUBDialect
   )

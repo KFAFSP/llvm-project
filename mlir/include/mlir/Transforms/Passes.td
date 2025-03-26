@@ -522,6 +522,56 @@ def SymbolPrivatize : Pass<"symbol-privatize"> {
   let constructor = "mlir::createSymbolPrivatizePass()";
 }
 
+def TypeCheck : Pass<"type-check"> {
+  let summary = "Perform gradual refinement type checking";
+  let description = [{
+    This pass invokes the fix point type checker to evaluate all typing rules of
+    all nested TypeCheckOpInterface ops to produce the most restrictive typing.
+
+    On failure, diagnostics detailing the typing error are produced.
+
+    On success, and if `allow-transmute` is set, the resulting typing is applied
+    to the IR in the following way:
+
+      - If a value received a new type, has non-transmutable uses (i.e., ops not
+        implementing the TypeCheckOpInterface), and `allow-promote` is set, all
+        such uses will be rewritten to a cast constructed by the value-owning
+        dialect first.
+
+      - If a value received a new type, and only has transmutable uses,
+        transmutation of the value is attempted.
+
+      - Otherwise, the value remains unchanged.
+  }];
+
+  let options = [
+    Option<
+      /*varName=*/"maxIterations",
+      /*arg=*/"max-iterations",
+      /*valueType=*/"std::size_t",
+      /*default=*/"10",
+      /*desc=*/"Maximum number of iterations per op">,
+    Option<
+      /*varName=*/"allowTransmute",
+      /*arg=*/"allow-transmute",
+      /*valueType=*/"bool",
+      /*default=*/"true",
+      /*desc=*/"Allow transmutation of SSA values">,
+    Option<
+      /*varName=*/"allowPromote",
+      /*arg=*/"allow-promote",
+      /*valueType=*/"bool",
+      /*default=*/"true",
+      /*desc=*/"Allow casting non-transmutable SSA edges">
+  ];
+  let statistics = [
+    Statistic<"numTransmuted", "num-transmuted", "Number of values transmuted">,
+    Statistic<"numPromoted", "num-promoted", "Number of promoting casts inserted">,
+  ];
+
+  let constructor = "mlir::createTypeCheckPass()";
+}
+
 def ViewOpGraph : Pass<"view-op-graph"> {
   let summary = "Print Graphviz visualization of an operation";
   let description = [{

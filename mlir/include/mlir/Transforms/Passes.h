@@ -45,6 +45,7 @@ class GreedyRewriteConfig;
 #define GEN_PASS_DECL_SYMBOLDCE
 #define GEN_PASS_DECL_SYMBOLPRIVATIZE
 #define GEN_PASS_DECL_TOPOLOGICALSORT
+#define GEN_PASS_DECL_TYPECHECK
 #define GEN_PASS_DECL_COMPOSITEFIXEDPOINTPASS
 #include "mlir/Transforms/Passes.h.inc"
 
@@ -132,6 +133,9 @@ createSymbolPrivatizePass(ArrayRef<std::string> excludeSymbols = {});
 /// topologically such that, as much as possible, users of values appear after
 /// their producers.
 std::unique_ptr<Pass> createTopologicalSortPass();
+
+/// Creates a pass that performs gradual refinement type checking.
+std::unique_ptr<Pass> createTypeCheckPass();
 
 /// Create composite pass, which runs provided set of passes until fixed point
 /// or maximum number of iterations reached.

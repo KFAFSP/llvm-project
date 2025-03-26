@@ -140,6 +140,14 @@ getBranchSuccessorArgument(const SuccessorOperands &operands,
 /// Verify that the given operands match those of the given successor block.
 LogicalResult verifyBranchSuccessorOperands(Operation *op, unsigned succNo,
                                             const SuccessorOperands &operands);
+
+/// Determines whether @p lhs can substitute @p rhs under the dialect of @p op .
+///
+/// @pre    `op && lhs && rhs`
+///
+/// @post   `result || lhs != rhs`
+[[nodiscard]] bool areTypesCompatible(Operation *op, Type lhs, Type rhs);
+
 } // namespace detail
 
 //===----------------------------------------------------------------------===//

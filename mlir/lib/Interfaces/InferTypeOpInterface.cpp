@@ -13,7 +13,10 @@
 
 #include "mlir/Interfaces/InferTypeOpInterface.h"
 #include "mlir/IR/BuiltinTypes.h"
+#include "mlir/IR/MLIRContext.h"
 #include "mlir/IR/Matchers.h"
+#include "mlir/IR/TypeSystem.h"
+#include "llvm/ADT/STLExtras.h"
 #include "llvm/Support/FormatVariadic.h"
 
 using namespace mlir;
@@ -252,4 +255,27 @@ void mlir::detail::reportFatalInferReturnTypesError(OperationState &state) {
   os << ") -> ( ??? )";
   emitRemark(state.location, "location of op");
   llvm::report_fatal_error(llvm::StringRef(buffer));
+}
+
+bool mlir::detail::isCompatibleReturnTypes(
+  StringLiteral op,
+  TypeRange lhs,
+  TypeRange rhs)
+{
+  if (lhs == rhs) return true;
+
+  // Since this is called from a static method, we have to take a detour.
+  auto *context = lhs.empty() ? rhs.front().getContext() : lhs.front().getContext();
+  auto *dialect = context->getLoadedDialect(op.split('.').first);
+  // FIXME: Investigate if this can be an assert instead.
+  if (!dialect) return false;
+
+  // Defer to the DialectTypeSystemInterface, if it is implemented.
+  const auto *iface = dialect->getRegisteredInterface<DialectTypeSystemInterface>();
+  if (!iface) return false;
+
+  // The inferred type lhs needs to satisfy the given bound rhs.
+  return llvm::all_of_zip(lhs, rhs, [=](Type lhs, Type rhs){
+    return iface->isSubtype(lhs, rhs);
+  });
 }

@@ -36,6 +36,7 @@ add_mlir_library(MLIRIR
   TensorEncoding.cpp
   Types.cpp
   TypeRange.cpp
+  TypeSystem.cpp
   TypeUtilities.cpp
   Unit.cpp
   Value.cpp
@@ -65,6 +66,7 @@ add_mlir_library(MLIRIR
   MLIRSideEffectInterfacesIncGen
   MLIRSymbolInterfacesIncGen
   MLIRTensorEncodingIncGen
+  MLIRTypeCheckOpInterfaceIncGen
 
   LINK_LIBS PUBLIC
   MLIRSupport

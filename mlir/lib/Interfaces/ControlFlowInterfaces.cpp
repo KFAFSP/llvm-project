@@ -9,6 +9,7 @@
 #include <utility>
 
 #include "mlir/IR/BuiltinTypes.h"
+#include "mlir/IR/TypeSystem.h"
 #include "mlir/Interfaces/ControlFlowInterfaces.h"
 #include "llvm/ADT/SmallPtrSet.h"
 
@@ -78,6 +79,19 @@ detail::verifyBranchSuccessorOperands(Operation *op, unsigned succNo,
                              << " of successor #" << succNo;
   }
   return success();
+}
+
+bool detail::areTypesCompatible(Operation *op, Type lhs, Type rhs) {
+  assert(op && lhs && rhs);
+
+  // Defer to the DialectTypeSystemInterface, if it is implemented.
+  if (const auto *iface = op->getDialect()
+    ->getRegisteredInterface<DialectTypeSystemInterface>()) {
+    // The control flow edge passes a value of lhs into a receiver of rhs.
+    return iface->isSubtype(lhs, rhs);
+  }
+
+  return lhs == rhs;
 }
 
 //===----------------------------------------------------------------------===//

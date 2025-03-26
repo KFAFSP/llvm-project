@@ -248,6 +248,16 @@ LogicalResult verifyInferredResultTypes(Operation *op);
 /// Report a fatal error indicating that the result types could not be
 /// inferred.
 void reportFatalInferReturnTypesError(OperationState &state);
+
+/// Determines whether @p lhs can substitute @p rhs under the dialect of @p op .
+///
+/// @pre    `llvm::count(lhs, nullptr) == 0 && llvm::count(rhs, nullptr) == 0`
+///
+/// @post   `result || lhs != rhs`
+[[nodiscard]] bool isCompatibleReturnTypes(
+  StringLiteral op,
+  TypeRange lhs,
+  TypeRange rhs);
 } // namespace detail
 
 namespace OpTrait {
