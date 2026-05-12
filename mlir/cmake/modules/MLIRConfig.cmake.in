@@ -24,6 +24,8 @@ set_property(GLOBAL PROPERTY MLIR_EXTENSION_LIBS "@MLIR_EXTENSION_LIBS@")
 set_property(GLOBAL PROPERTY MLIR_TRANSLATION_LIBS "@MLIR_TRANSLATION_LIBS@")
 set_property(GLOBAL PROPERTY MLIR_UPSTREAM_CAPI_LIBS "@MLIR_CAPI_LIBS@")
 
+@MLIR_CONFIG_LINK_MLIR_DYLIB@
+
 # Provide all our library targets to users.
 # More specifically, configure MLIR so that it can be directly included in a top
 # level CMakeLists.txt, but also so that it can be imported via `find_package`.
